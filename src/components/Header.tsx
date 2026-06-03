@@ -16,7 +16,7 @@ export default function Header() {
             </div>
             <div>
               <h1 className="text-white text-lg md:text-xl font-bold tracking-tight mb-0.5">AI Di+ 實驗方案計劃</h1>
-              <p className="text-[#C5A059] text-[10px] md:text-xs uppercase tracking-widest font-semibold hidden sm:block font-serif">Education Excellence • NPTU</p>
+              <p className="text-[#C5A059] text-[10px] md:text-xs uppercase tracking-widest font-semibold hidden sm:block font-serif">AI Di+ Experimental Scheme Project</p>
             </div>
           </Link>
           <div className="hidden lg:flex items-center gap-4 xl:gap-8 text-white text-sm font-medium">
