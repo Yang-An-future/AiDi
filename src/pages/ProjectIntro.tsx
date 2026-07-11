@@ -12,14 +12,14 @@ export default function ProjectIntro() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-[#003366] font-serif mb-4 italic">計畫介紹</h2>
-          <div className="h-1.5 w-24 bg-[#C5A059] mx-auto"></div>
+          <div className="h-1.5 w-24 bg-[#F5892E] mx-auto"></div>
         </motion.div>
 
         <div className="space-y-16">
           {/* Section 1: 三大特色課程領域 */}
           <section className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-l-[12px] border-[#003366]">
             <h3 className="text-2xl font-bold text-[#003366] flex items-center gap-4 mb-8">
-              <BookOpen className="w-8 h-8 text-[#C5A059]" /> 1. 三大特色課程領域
+              <BookOpen className="w-8 h-8 text-[#F5892E]" /> 1. 三大特色課程領域
             </h3>
             <p className="text-gray-600 mb-10 leading-relaxed">
               計畫將教學科目精心規劃為三個富有創意的領域，涵蓋基礎學科到前瞻的 AI 科技應用：
@@ -45,9 +45,9 @@ export default function ProjectIntro() {
           </section>
 
           {/* Section 2: 深度導入 AI 與數位學習平臺 */}
-          <section className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-r-[12px] border-[#C5A059]">
+          <section className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-r-[12px] border-[#F5892E]">
             <h3 className="text-2xl font-bold text-[#003366] flex items-center gap-4 mb-8">
-              <Sparkles className="w-8 h-8 text-[#C5A059]" /> 2. 深度導入 AI 與數位學習平臺
+              <Sparkles className="w-8 h-8 text-[#F5892E]" /> 2. 深度導入 AI 與數位學習平臺
             </h3>
             <div className="space-y-6 text-gray-600">
               <p className="leading-relaxed">
@@ -63,18 +63,18 @@ export default function ProjectIntro() {
           {/* Section 3: 「一對四」大學伴線上陪伴模式 */}
           <section className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-l-[12px] border-[#003366]">
             <h3 className="text-2xl font-bold text-[#003366] flex items-center gap-4 mb-8">
-              <UserCheck className="w-8 h-8 text-[#C5A059]" /> 3. 「一對四」大學伴線上陪伴模式
+              <UserCheck className="w-8 h-8 text-[#F5892E]" /> 3. 「一對四」大學伴線上陪伴模式
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <h4 className="font-bold text-[#003366] flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#C5A059] rounded-full"></span> 定時定點
+                  <span className="w-2 h-2 bg-[#F5892E] rounded-full"></span> 定時定點
                 </h4>
                 <p className="text-sm text-gray-500 pl-4">安排於課後時間，每週 2 次，每次 90 分鐘，穩定陪伴國中小學生（3 至 9 年級）學習。</p>
               </div>
               <div className="space-y-4">
                 <h4 className="font-bold text-[#003366] flex items-center gap-2">
-                  <span className="w-2 h-2 bg-[#C5A059] rounded-full"></span> 小班式分組
+                  <span className="w-2 h-2 bg-[#F5892E] rounded-full"></span> 小班式分組
                 </h4>
                 <p className="text-sm text-gray-500 pl-4">原則上採 1 位大學伴對 4 位小學伴的線上模式，提供即時的資訊應用與學習諮詢。</p>
               </div>
@@ -82,9 +82,9 @@ export default function ProjectIntro() {
           </section>
 
           {/* Section 4: 著重自主學習與多元教學法 */}
-          <section className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-r-[12px] border-[#C5A059]">
+          <section className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-r-[12px] border-[#F5892E]">
             <h3 className="text-2xl font-bold text-[#003366] flex items-center gap-4 mb-8">
-              <Target className="w-8 h-8 text-[#C5A059]" /> 4. 著重自主學習與多元教學法
+              <Target className="w-8 h-8 text-[#F5892E]" /> 4. 著重自主學習與多元教學法
             </h3>
             <div className="space-y-6">
               <p className="text-gray-600 leading-relaxed">

@@ -13,7 +13,7 @@ export default function ScheduleModal({ onClose }: { onClose: () => void }) {
           <X className="w-5 h-5" />
         </button>
         <h3 className="text-lg font-bold text-[#003366] flex items-center gap-2 mb-6">
-          <CalendarDays className="w-5 h-5 text-[#C5A059]" /> 課程總表
+          <CalendarDays className="w-5 h-5 text-[#F5892E]" /> 課程總表
         </h3>
 
         {loading && <p className="text-sm text-gray-400">載入中...</p>}

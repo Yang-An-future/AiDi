@@ -25,7 +25,7 @@ export default function AdminDashboard() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-[#003366] flex items-center gap-3">
-            <LayoutDashboard className="w-6 h-6 text-[#C5A059]" /> 管理後台
+            <LayoutDashboard className="w-6 h-6 text-[#F5892E]" /> 管理後台
           </h1>
           <div className="flex items-center gap-4">
             <span className="text-xs text-gray-400">{user?.email}</span>
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
               key={t.key}
               onClick={() => setActive(t.key)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
-                active === t.key ? 'bg-[#003366] text-white' : 'bg-white text-gray-500 border border-slate-200 hover:border-[#C5A059]'
+                active === t.key ? 'bg-[#003366] text-white' : 'bg-white text-gray-500 border border-slate-200 hover:border-[#F5892E]'
               }`}
             >
               <t.icon className="w-4 h-4" /> {t.label}

@@ -10,8 +10,6 @@ services:
         value: 20.11.0
       # Set these in the Render dashboard (Environment tab) instead of committing
       # real values here:
-      - key: GEMINI_API_KEY
-        sync: false
       - key: VITE_FIREBASE_API_KEY
         sync: false
       - key: VITE_FIREBASE_AUTH_DOMAIN

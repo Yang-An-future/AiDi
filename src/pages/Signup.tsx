@@ -43,10 +43,10 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border-t-8 border-[#C5A059]"
+        className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border-t-8 border-[#F5892E]"
       >
         <h1 className="text-xl font-bold text-[#003366] flex items-center gap-3 mb-8">
-          <UserPlus className="w-5 h-5 text-[#C5A059]" /> 大學伴／學習端老師註冊
+          <UserPlus className="w-5 h-5 text-[#F5892E]" /> 大學伴／學習端老師註冊
         </h1>
 
         <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -55,7 +55,7 @@ export default function Signup() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
         />
 
         <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
@@ -64,7 +64,7 @@ export default function Signup() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
         />
 
         <label className="block text-sm font-medium text-gray-700 mb-1">確認密碼</label>
@@ -73,7 +73,7 @@ export default function Signup() {
           required
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full mb-6 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+          className="w-full mb-6 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
         />
 
         {error && <p className="text-red-600 text-sm mb-4">{error}</p>}

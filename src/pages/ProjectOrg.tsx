@@ -25,7 +25,7 @@ export default function ProjectOrg() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center mb-16"
         >
-          <span className="text-[#C5A059] font-bold tracking-[0.3em] text-sm uppercase block mb-2">Internal Structure</span>
+          <span className="text-[#F5892E] font-bold tracking-[0.3em] text-sm uppercase block mb-2">Internal Structure</span>
           <h2 className="text-4xl md:text-5xl font-bold text-[#003366] font-serif mb-4">計畫組織</h2>
           <div className="h-1.5 w-24 bg-[#003366] mx-auto mb-4"></div>
           <p className="text-gray-500 max-w-lg mx-auto text-sm">由國立屏東大學專業教育團隊主導，結合學術研究與數位科技實踐。</p>
@@ -36,7 +36,7 @@ export default function ProjectOrg() {
           <div className="lg:col-span-5">
             <div className="bg-[#003366] rounded-[2rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
-              <ShieldCheck className="w-12 h-12 text-[#C5A059] mb-8" />
+              <ShieldCheck className="w-12 h-12 text-[#F5892E] mb-8" />
               <h3 className="text-sm font-bold tracking-widest text-blue-300 uppercase mb-2">Principal Investigator</h3>
               <h4 className="text-3xl font-bold mb-4 font-serif">{principalInvestigator.name}</h4>
               <div className="flex items-center gap-2 text-blue-200 text-sm mb-8 italic">
@@ -57,7 +57,7 @@ export default function ProjectOrg() {
           <div className="lg:col-span-7 space-y-6">
             <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-slate-100">
                <h3 className="text-xl font-bold text-[#003366] mb-8 flex items-center gap-3">
-                <Users className="w-6 h-6 text-[#C5A059]" /> 專任助理團隊
+                <Users className="w-6 h-6 text-[#F5892E]" /> 專任助理團隊
               </h3>
               
               <div className="space-y-4">
@@ -66,7 +66,7 @@ export default function ProjectOrg() {
                 )}
                 {assistants.map((assistant) => (
                   <div key={assistant.id} className="flex gap-6 p-6 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 group">
-                    <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 text-slate-400 group-hover:bg-[#C5A059]/10 group-hover:text-[#C5A059] transition-all">
+                    <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0 text-slate-400 group-hover:bg-[#F5892E]/10 group-hover:text-[#F5892E] transition-all">
                       <User className="w-7 h-7" />
                     </div>
                     <div>

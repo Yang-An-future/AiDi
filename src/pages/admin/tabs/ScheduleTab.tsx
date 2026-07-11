@@ -59,7 +59,7 @@ export default function ScheduleTab() {
 
       <div className="mt-8 p-6 bg-slate-50 rounded-xl border border-slate-200">
         <h4 className="font-bold text-[#003366] flex items-center gap-2 mb-3">
-          <CalendarDays className="w-5 h-5 text-[#C5A059]" /> 目前課程總表
+          <CalendarDays className="w-5 h-5 text-[#F5892E]" /> 目前課程總表
         </h4>
         {loading && <p className="text-sm text-gray-400">載入中...</p>}
         {!loading && !schedule && <p className="text-sm text-gray-400 italic">尚未上傳課程總表。</p>}

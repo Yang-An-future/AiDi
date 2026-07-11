@@ -63,7 +63,7 @@ export default function OnboardingModal() {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
         />
 
         <label className="block text-sm font-medium text-gray-700 mb-1">班級</label>
@@ -73,7 +73,7 @@ export default function OnboardingModal() {
           value={className}
           onChange={(e) => setClassName(e.target.value)}
           placeholder="例：教育系三年級 / 屏大附小三年一班"
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
         />
 
         <label className="block text-sm font-medium text-gray-700 mb-1">電話</label>
@@ -82,7 +82,7 @@ export default function OnboardingModal() {
           required
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
         />
 
         <label className="block text-sm font-medium text-gray-700 mb-2">身分</label>

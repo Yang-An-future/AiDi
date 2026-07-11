@@ -1,7 +1,3 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
-
 # AI Di+ 實驗方案計劃網站
 
 原始版本由 AI Studio 產生，現已調整為可部署至 Render，並使用 Firebase（Firestore + Storage + Auth）作為內容資料庫、檔案儲存與帳號登入機制。
@@ -39,6 +35,7 @@
 - `scripts/createAdmin.mjs` — 建立/晉升管理員帳號
 - `firestore.rules` / `storage.rules` — Firestore／Storage 安全規則（角色式存取控制）
 - `render.yaml` — Render 部署設定（Node Web Service）
+- `LOGO/` — 官方 LOGO 高解析度原始檔（設計來源，網站本身用的是 `src/assets/logo-*.webp` 這些已裁切壓縮過的版本）
 
 ## Run Locally
 
@@ -47,7 +44,6 @@
 1. Install dependencies:
    `npm install`
 2. 複製 `.env.example` 為 `.env.local`，並填入：
-   - `GEMINI_API_KEY`（如有使用 Gemini API 功能）
    - `VITE_FIREBASE_*`：Firebase Console → 專案設定 → 一般 → 你的應用程式（Web App）取得
    - `FIREBASE_SERVICE_ACCOUNT_JSON`：Firebase Console → 專案設定 → 服務帳戶 → 產生新的私密金鑰，將整份 JSON 貼成一行字串（僅本機/後端使用，`.env.local` 已被 `.gitignore` 排除，切勿提交到版本控制）
 3. 將範例公告/課程/回顧/組織資料寫入 Firestore（首次設定時執行一次即可，之後請直接在 Firestore Console 編輯）：
@@ -75,7 +71,7 @@
 2. Render 服務設定（`render.yaml` 已內建）：
    - Build Command: `npm install && npm run build`
    - Start Command: `npm run start`
-3. 在 Render 的 Environment 設定填入（與本機 `.env.local` 相同的值）：`GEMINI_API_KEY`、`VITE_FIREBASE_*` 六項、`FIREBASE_SERVICE_ACCOUNT_JSON`。
+3. 在 Render 的 Environment 設定填入（與本機 `.env.local` 相同的值）：`VITE_FIREBASE_*` 六項、`FIREBASE_SERVICE_ACCOUNT_JSON`。
    - `VITE_*` 變數會在 build 階段被打包進前端程式碼，務必在觸發 build 前設定好，否則需要重新觸發一次部署。
 4. 部署完成後，於瀏覽器開啟服務網址，`/login` 為登入頁、`/signup` 為大學伴／學習端老師註冊頁。
 

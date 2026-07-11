@@ -52,7 +52,7 @@ export default function Home() {
             transition={{ delay: 0.2 }}
           >
             <h2 className="text-4xl md:text-6xl font-bold font-serif mb-4 leading-tight">AI Di+ 實驗方案計劃</h2>
-            <div className="h-1.5 w-24 bg-[#C5A059] mb-6"></div>
+            <div className="h-1.5 w-24 bg-[#F5892E] mb-6"></div>
             <p className="text-lg md:text-2xl text-gray-200 max-w-2xl font-light">
               「AI 加成」數位學伴：引領偏鄉教育邁向智慧新世代
             </p>
@@ -65,7 +65,7 @@ export default function Home() {
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className={`w-3 h-3 rounded-full transition-all ${i === currentSlide ? 'bg-[#C5A059] w-8' : 'bg-white/50'}`}
+              className={`w-3 h-3 rounded-full transition-all ${i === currentSlide ? 'bg-[#F5892E] w-8' : 'bg-white/50'}`}
             />
           ))}
         </div>
@@ -77,7 +77,7 @@ export default function Home() {
           {/* Latest Announcements */}
           <section className="bg-white rounded-xl shadow-xl p-8 border-t-8 border-[#003366]">
             <h3 className="text-xl font-bold text-[#003366] flex items-center gap-3 mb-6">
-              <Bell className="w-5 h-5 text-[#C5A059]" /> 最新公告
+              <Bell className="w-5 h-5 text-[#F5892E]" /> 最新公告
             </h3>
             <div className="space-y-4">
               {!announcementsLoading && announcements.length === 0 && (
@@ -96,20 +96,20 @@ export default function Home() {
           </section>
 
           {/* Course Announcements */}
-          <section className="bg-white rounded-xl shadow-xl p-8 border-t-8 border-[#C5A059]">
+          <section className="bg-white rounded-xl shadow-xl p-8 border-t-8 border-[#F5892E]">
             <h3 className="text-xl font-bold text-[#003366] flex items-center gap-3 mb-6">
-              <CalendarClock className="w-5 h-5 text-[#C5A059]" /> 課程公告
+              <CalendarClock className="w-5 h-5 text-[#F5892E]" /> 課程公告
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {!coursesLoading && courses.length === 0 && (
                 <p className="text-sm text-gray-400 italic sm:col-span-2">目前尚無課程公告。</p>
               )}
               {courses.map((item) => (
-                <div key={item.id} className="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:border-[#C5A059] transition-all group">
+                <div key={item.id} className="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:border-[#F5892E] transition-all group">
                   <span className="text-[10px] bg-[#003366] text-white px-2 py-0.5 rounded-full mb-3 inline-block">{item.tag}</span>
                   <h4 className="font-bold text-gray-800 group-hover:text-[#003366]">{item.title}</h4>
                   <p className="text-xs text-gray-500 mt-2">地點：{item.location}</p>
-                  <p className="text-xs text-[#C5A059] mt-1 font-semibold">時間：{item.time}</p>
+                  <p className="text-xs text-[#F5892E] mt-1 font-semibold">時間：{item.time}</p>
                 </div>
               ))}
             </div>
@@ -118,7 +118,7 @@ export default function Home() {
           {/* 4. Project Execution Review */}
           <section>
             <h3 className="text-2xl font-bold text-[#003366] mb-8 flex items-center gap-4">
-              <div className="w-8 h-1 bg-[#C5A059]"></div>
+              <div className="w-8 h-1 bg-[#F5892E]"></div>
               計畫執行回顧
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -133,7 +133,7 @@ export default function Home() {
                   </div>
                   <div className="p-6 text-center">
                     <h4 className="text-lg font-bold text-gray-800 group-hover:text-[#003366] transition-colors">{rev.year}</h4>
-                    <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-[#C5A059] opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="mt-4 flex items-center justify-center gap-2 text-xs font-bold text-[#F5892E] opacity-0 group-hover:opacity-100 transition-opacity">
                       查看回顧 <ExternalLink className="w-3 h-3" />
                     </div>
                   </div>
@@ -147,12 +147,12 @@ export default function Home() {
         <div className="md:col-span-4">
           <section className="bg-white rounded-xl shadow-lg p-8 sticky top-24 border-l-4 border-[#003366]">
             <h3 className="text-xl font-bold text-[#003366] flex items-center gap-3 mb-8">
-              <School className="w-6 h-6 text-[#C5A059]" /> 合作學校
+              <School className="w-6 h-6 text-[#F5892E]" /> 合作學校
             </h3>
             <div className="grid grid-cols-2 gap-8">
               {schools.map((school) => (
                 <div key={school.id} className="flex flex-col items-center group cursor-default">
-                  <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 mb-3 shadow-inner group-hover:border-[#C5A059] transition-colors">
+                  <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 mb-3 shadow-inner group-hover:border-[#F5892E] transition-colors">
                     <img src={school.logoUrl} alt={school.name} className="w-full h-full object-contain" />
                   </div>
                   <span className="text-sm font-bold text-gray-700 text-center group-hover:text-[#003366] transition-colors">{school.name}</span>

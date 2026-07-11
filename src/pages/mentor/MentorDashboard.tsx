@@ -60,12 +60,12 @@ export default function MentorDashboard() {
             onClick={() => setShowSchedule(true)}
             className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-[#003366] text-left hover:shadow-xl transition-shadow"
           >
-            <CalendarDays className="w-8 h-8 text-[#C5A059] mb-4" />
+            <CalendarDays className="w-8 h-8 text-[#F5892E] mb-4" />
             <h3 className="font-bold text-[#003366] text-lg">查看課表</h3>
             <p className="text-xs text-gray-400 mt-1">檢視目前課程總表</p>
           </button>
 
-          <label className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-[#C5A059] cursor-pointer hover:shadow-xl transition-shadow block">
+          <label className="bg-white rounded-2xl shadow-lg p-8 border-l-4 border-[#F5892E] cursor-pointer hover:shadow-xl transition-shadow block">
             <Upload className="w-8 h-8 text-[#003366] mb-4" />
             <h3 className="font-bold text-[#003366] text-lg">{uploading ? '上傳中...' : '上傳教案'}</h3>
             <p className="text-xs text-gray-400 mt-1">支援 PDF / Word / PPT，上限 20MB</p>
@@ -76,7 +76,7 @@ export default function MentorDashboard() {
 
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
           <h3 className="font-bold text-[#003366] flex items-center gap-2 mb-6">
-            <FileText className="w-5 h-5 text-[#C5A059]" /> 我上傳的教案
+            <FileText className="w-5 h-5 text-[#F5892E]" /> 我上傳的教案
           </h3>
           {loading && <p className="text-sm text-gray-400">載入中...</p>}
           <div className="space-y-3">
@@ -86,7 +86,7 @@ export default function MentorDashboard() {
                 href={p.fileUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-[#C5A059] transition-colors"
+                className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-[#F5892E] transition-colors"
               >
                 <span className="text-sm font-medium text-gray-700">{p.fileName}</span>
                 <span className="text-xs text-[#003366] font-bold">查看</span>

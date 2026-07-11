@@ -13,6 +13,7 @@ import MentorDashboard from './pages/mentor/MentorDashboard';
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import RequireRole from './components/RequireRole';
 import OnboardingModal from './components/OnboardingModal';
+import IntroAnimation from './components/IntroAnimation';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -36,6 +37,7 @@ function OnboardingGate() {
 export default function App() {
   return (
     <BrowserRouter>
+      <IntroAnimation />
       <AuthProvider>
         <OnboardingGate />
         <Routes>
