@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bell, CalendarClock, School, ExternalLink } from 'lucide-react';
+import { orderBy } from 'firebase/firestore';
+import { Bell, CalendarClock, ChevronDown, ChevronUp, School, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFirestoreCollection } from '../hooks/useFirestore';
 import type { Announcement, CourseAnnouncement, ReviewEntry, PartnerSchool } from '../types/content';
 import type { CarouselSlide } from '../types/portal';
+
+const announcementConstraints = [orderBy('order', 'desc')];
 
 const fallbackCarouselImages = [
   "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=1920",
@@ -14,8 +17,12 @@ const fallbackCarouselImages = [
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
 
-  const { data: announcements, loading: announcementsLoading } = useFirestoreCollection<Announcement>('announcements');
+  const { data: announcements, loading: announcementsLoading } = useFirestoreCollection<Announcement>(
+    'announcements',
+    announcementConstraints
+  );
   const { data: courses, loading: coursesLoading } = useFirestoreCollection<CourseAnnouncement>('courses');
   const { data: reviews } = useFirestoreCollection<ReviewEntry>('reviews');
   const { data: schools } = useFirestoreCollection<PartnerSchool>('schools');
@@ -79,11 +86,11 @@ export default function Home() {
             <h3 className="text-xl font-bold text-[#003366] flex items-center gap-3 mb-6">
               <Bell className="w-5 h-5 text-[#F5892E]" /> 最新公告
             </h3>
-            <div className="space-y-4">
+            <div className={`space-y-4 ${showAllAnnouncements ? 'max-h-96 overflow-y-auto pr-2' : ''}`}>
               {!announcementsLoading && announcements.length === 0 && (
                 <p className="text-sm text-gray-400 italic">目前尚無公告。</p>
               )}
-              {announcements.slice(0, 3).map((item) => (
+              {(showAllAnnouncements ? announcements : announcements.slice(0, 3)).map((item) => (
                 <div key={item.id} className="group flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 cursor-pointer">
                   <div className="text-xs font-mono text-gray-400 mt-1">{item.date}</div>
                   <div>
@@ -93,6 +100,22 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            {announcements.length > 3 && (
+              <button
+                onClick={() => setShowAllAnnouncements((v) => !v)}
+                className="mt-4 flex items-center gap-1 text-sm font-bold text-[#003366] hover:text-[#F5892E] transition-colors"
+              >
+                {showAllAnnouncements ? (
+                  <>
+                    收合 <ChevronUp className="w-4 h-4" />
+                  </>
+                ) : (
+                  <>
+                    查看更多公告（共 {announcements.length} 則） <ChevronDown className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            )}
           </section>
 
           {/* Course Announcements */}
@@ -151,12 +174,18 @@ export default function Home() {
             </h3>
             <div className="grid grid-cols-2 gap-8">
               {schools.map((school) => (
-                <div key={school.id} className="flex flex-col items-center group cursor-default">
+                <a
+                  key={school.id}
+                  href={school.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex flex-col items-center group"
+                >
                   <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center p-2 mb-3 shadow-inner group-hover:border-[#F5892E] transition-colors">
                     <img src={school.logoUrl} alt={school.name} className="w-full h-full object-contain" />
                   </div>
                   <span className="text-sm font-bold text-gray-700 text-center group-hover:text-[#003366] transition-colors">{school.name}</span>
-                </div>
+                </a>
               ))}
             </div>
             <div className="mt-12 p-6 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-center">

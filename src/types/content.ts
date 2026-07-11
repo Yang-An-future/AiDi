@@ -26,6 +26,7 @@ export interface PartnerSchool {
   id: string;
   name: string;
   logoUrl: string;
+  website?: string;
   order: number;
 }
 
