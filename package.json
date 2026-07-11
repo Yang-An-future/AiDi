@@ -12,6 +12,7 @@
     "lint": "tsc --noEmit",
     "seed": "node scripts/seed.mjs",
     "seed-roster": "node scripts/seedRoster.mjs",
+    "seed-test-accounts": "node scripts/seedTestAccounts.mjs",
     "create-admin": "node scripts/createAdmin.mjs",
     "deploy-rules": "node scripts/deployRules.mjs"
   },

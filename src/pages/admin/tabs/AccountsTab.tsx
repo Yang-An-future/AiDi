@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { doc, orderBy, updateDoc, writeBatch } from 'firebase/firestore';
+import { deleteDoc, doc, orderBy, updateDoc, writeBatch } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { useFirestoreCollection } from '../../../hooks/useFirestore';
 import type { UserProfile, UserRole, UserStatus } from '../../../types/portal';
-import { Pencil, X } from 'lucide-react';
+import { Pencil, Trash2, X } from 'lucide-react';
 
 const roleLabel: Record<UserRole, string> = { admin: '管理員', mentor: '大學伴', teacher: '學習端老師' };
 const statusLabel: Record<UserStatus, string> = { pending: '待審核', active: '已啟用', disabled: '已停用' };
@@ -54,6 +54,15 @@ export default function AccountsTab() {
   const setOneStatus = async (uid: string, status: UserStatus) => {
     if (!db) return;
     await updateDoc(doc(db, 'users', uid), { status });
+  };
+
+  // Only removes the Firestore profile — the underlying Google sign-in
+  // still works, so onboarding just runs again from scratch on next login.
+  // Handy for resetting a test account between mentor/teacher runs.
+  const deleteOne = async (u: UserProfile) => {
+    if (!db) return;
+    if (!window.confirm(`確定要刪除「${u.name}」（${u.email}）的帳號資料嗎？此動作無法復原。`)) return;
+    await deleteDoc(doc(db, 'users', u.uid));
   };
 
   if (loading) return <p className="text-sm text-gray-400">載入中...</p>;
@@ -119,6 +128,9 @@ export default function AccountsTab() {
                   )}
                   <button onClick={() => setEditing(u)} className="text-gray-400 hover:text-[#003366]">
                     <Pencil className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => deleteOne(u)} className="text-gray-400 hover:text-red-600">
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </td>
               </tr>

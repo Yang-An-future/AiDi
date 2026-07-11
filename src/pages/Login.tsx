@@ -39,6 +39,7 @@ export default function Login() {
       await loginWithGoogle();
       navigate('/portal');
     } catch (err) {
+      console.error('Google sign-in failed:', err);
       const code = (err as { code?: string })?.code;
       if (code === 'auth/account-exists-with-different-credential' && err instanceof FirebaseError) {
         const credential = GoogleAuthProvider.credentialFromError(err);
@@ -52,7 +53,7 @@ export default function Login() {
       } else if (code === 'auth/popup-closed-by-user') {
         // User cancelled — no error message needed.
       } else {
-        setError('登入失敗，請稍後再試一次。');
+        setError(`登入失敗，請稍後再試一次。${code ? `（錯誤代碼：${code}）` : ''}`);
       }
     } finally {
       setSubmitting(false);
