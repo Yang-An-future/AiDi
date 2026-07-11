@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { orderBy } from 'firebase/firestore';
-import { Bell, CalendarClock, ChevronDown, ChevronUp, School, ExternalLink } from 'lucide-react';
+import { Bell, CalendarClock, ChevronDown, ChevronUp, School, ExternalLink, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFirestoreCollection } from '../hooks/useFirestore';
 import type { Announcement, CourseAnnouncement, ReviewEntry, PartnerSchool } from '../types/content';
@@ -18,6 +18,7 @@ const fallbackCarouselImages = [
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<CourseAnnouncement | null>(null);
 
   const { data: announcements, loading: announcementsLoading } = useFirestoreCollection<Announcement>(
     'announcements',
@@ -93,9 +94,12 @@ export default function Home() {
               {(showAllAnnouncements ? announcements : announcements.slice(0, 3)).map((item) => (
                 <div key={item.id} className="group flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 cursor-pointer">
                   <div className="text-xs font-mono text-gray-400 mt-1">{item.date}</div>
-                  <div>
+                  <div className="min-w-0">
                     <h4 className="font-bold text-gray-800 group-hover:text-[#003366] transition-colors line-clamp-1">{item.title}</h4>
-                    <p className="text-sm text-gray-500 mt-1 line-clamp-2 italic">{item.summary}</p>
+                    <div
+                      className="text-sm text-gray-500 mt-1 line-clamp-2 italic [&_img]:max-h-12 [&_img]:inline-block [&_img]:rounded [&_a]:text-[#003366] [&_a]:underline [&_a]:not-italic"
+                      dangerouslySetInnerHTML={{ __html: item.summary }}
+                    />
                   </div>
                 </div>
               ))}
@@ -128,12 +132,16 @@ export default function Home() {
                 <p className="text-sm text-gray-400 italic sm:col-span-2">目前尚無課程公告。</p>
               )}
               {courses.map((item) => (
-                <div key={item.id} className="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:border-[#F5892E] transition-all group">
+                <button
+                  key={item.id}
+                  onClick={() => setSelectedCourse(item)}
+                  className="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:border-[#F5892E] transition-all group text-left"
+                >
                   <span className="text-[10px] bg-[#003366] text-white px-2 py-0.5 rounded-full mb-3 inline-block">{item.tag}</span>
                   <h4 className="font-bold text-gray-800 group-hover:text-[#003366]">{item.title}</h4>
                   <p className="text-xs text-gray-500 mt-2">地點：{item.location}</p>
                   <p className="text-xs text-[#F5892E] mt-1 font-semibold">時間：{item.time}</p>
-                </div>
+                </button>
               ))}
             </div>
           </section>
@@ -194,6 +202,36 @@ export default function Home() {
           </section>
         </div>
       </div>
+
+      {selectedCourse && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center px-6"
+          onClick={() => setSelectedCourse(null)}
+        >
+          <div
+            className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#F5892E] relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedCourse(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <span className="text-[10px] bg-[#003366] text-white px-2 py-0.5 rounded-full mb-3 inline-block">
+              {selectedCourse.tag}
+            </span>
+            <h3 className="text-lg font-bold text-[#003366] mb-4">{selectedCourse.title}</h3>
+            <p className="text-sm text-gray-600">地點：{selectedCourse.location}</p>
+            <p className="text-sm text-[#F5892E] font-semibold mt-1">時間：{selectedCourse.time}</p>
+            {selectedCourse.remark && (
+              <p className="text-sm text-gray-500 mt-4 pt-4 border-t border-slate-100 whitespace-pre-line">
+                {selectedCourse.remark}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

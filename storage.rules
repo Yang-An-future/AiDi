@@ -25,6 +25,12 @@ service firebase.storage {
       allow write: if isAdmin() && underSizeLimit();
     }
 
+    // Images embedded in announcement rich text — public read, admin manages.
+    match /announcements/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && underSizeLimit();
+    }
+
     // Master course schedule file — any signed-in account can read/download,
     // only admin can replace it.
     match /courseSchedule/{fileName} {

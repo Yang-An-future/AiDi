@@ -1,7 +1,7 @@
 export interface Announcement {
   id: string;
   title: string;
-  summary: string;
+  summary: string; // rich text (HTML) — may contain formatting, links, images
   date: string; // e.g. "2026/05/12"
   order: number;
 }
@@ -12,6 +12,7 @@ export interface CourseAnnouncement {
   title: string;
   location: string;
   time: string;
+  remark?: string; // only shown once the homepage card is opened
   order: number;
 }
 
