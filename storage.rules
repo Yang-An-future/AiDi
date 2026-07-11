@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function userDoc() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return request.auth != null && userDoc().role == 'admin';
+    }
+
+    function isActiveRole(role) {
+      return request.auth != null && userDoc().role == role && userDoc().status == 'active';
+    }
+
+    function underSizeLimit() {
+      return request.resource.size < 20 * 1024 * 1024;
+    }
+
+    // Homepage carousel photos — public read, admin manages.
+    match /carousel/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && underSizeLimit();
+    }
+
+    // Master course schedule file — any signed-in account can read/download,
+    // only admin can replace it.
+    match /courseSchedule/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin() && underSizeLimit();
+    }
+
+    // Mentor lesson plan uploads, one folder per mentor uid.
+    match /lessonPlans/{mentorUid}/{fileName} {
+      allow read: if request.auth != null && (request.auth.uid == mentorUid || isAdmin());
+      allow create: if request.auth != null && request.auth.uid == mentorUid
+        && isActiveRole('mentor') && underSizeLimit();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // Teacher survey uploads, one folder per teacher uid.
+    match /surveys/{teacherUid}/{fileName} {
+      allow read: if request.auth != null && (request.auth.uid == teacherUid || isAdmin());
+      allow create: if request.auth != null && request.auth.uid == teacherUid
+        && isActiveRole('teacher') && underSizeLimit();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

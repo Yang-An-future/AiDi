@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 
-export default function AdminLogin() {
+export default function Login() {
   const { user, login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ export default function AdminLogin() {
   const [submitting, setSubmitting] = useState(false);
 
   if (user) {
-    return <Navigate to="/admin" replace />;
+    return <Navigate to="/portal" replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,7 +21,7 @@ export default function AdminLogin() {
     setSubmitting(true);
     try {
       await login(email, password);
-      navigate('/admin');
+      navigate('/portal');
     } catch {
       setError('登入失敗，請確認帳號密碼是否正確。');
     } finally {
@@ -36,7 +36,7 @@ export default function AdminLogin() {
         className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border-t-8 border-[#003366]"
       >
         <h1 className="text-xl font-bold text-[#003366] flex items-center gap-3 mb-8">
-          <LogIn className="w-5 h-5 text-[#C5A059]" /> 管理後台登入
+          <LogIn className="w-5 h-5 text-[#C5A059]" /> 計畫工作坊登入
         </h1>
 
         <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -66,6 +66,13 @@ export default function AdminLogin() {
         >
           {submitting ? '登入中...' : '登入'}
         </button>
+
+        <p className="text-center text-xs text-gray-400 mt-6">
+          大學伴／學習端老師還沒有帳號？
+          <Link to="/signup" className="text-[#003366] font-semibold hover:underline ml-1">
+            立即註冊
+          </Link>
+        </p>
       </form>
     </div>
   );

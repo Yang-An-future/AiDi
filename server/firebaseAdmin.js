@@ -31,7 +31,10 @@ export function getFirebaseAdminApp() {
     );
   }
 
-  app = initializeApp({ credential: cert(serviceAccount) });
+  app = initializeApp({
+    credential: cert(serviceAccount),
+    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  });
   return app;
 }
 

@@ -3,37 +3,91 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Public content collections: anyone can read, only signed-in admins can write.
-    // "Signed-in" == exists as a Firebase Auth user; there's currently a single
-    // admin role, so authentication alone is treated as authorization.
+    function currentUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return request.auth != null && currentUser().role == 'admin';
+    }
+
+    function isActiveRole(role) {
+      return request.auth != null && currentUser().role == role && currentUser().status == 'active';
+    }
+
+    // --- Public content (homepage / static pages) ---
+    // Read: anyone. Write: admin only — regular mentor/teacher accounts also
+    // authenticate now, so "signed in" alone is no longer enough to write.
     match /announcements/{docId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /courses/{docId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /reviews/{docId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /schools/{docId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /assistants/{docId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
     }
 
     match /org/{docId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    match /carouselSlides/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --- Accounts ---
+    // Self-registration creates a "pending" mentor/teacher profile that can't
+    // grant itself admin or flip its own status; only an admin can do that.
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.role in ['mentor', 'teacher']
+        && request.resource.data.status == 'pending'
+        && request.resource.data.email == request.auth.token.email;
+      allow update: if isAdmin()
+        || (request.auth != null && request.auth.uid == userId
+            && request.resource.data.role == resource.data.role
+            && request.resource.data.status == resource.data.status);
+      allow delete: if isAdmin();
+    }
+
+    // --- Course schedule master file (admin uploads, everyone logged in reads) ---
+    match /courseSchedule/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAdmin();
+    }
+
+    // --- Mentor lesson plan uploads ---
+    match /lessonPlans/{docId} {
+      allow read: if request.auth != null && (isAdmin() || resource.data.mentorUid == request.auth.uid);
+      allow create: if isActiveRole('mentor') && request.resource.data.mentorUid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // --- Teacher survey uploads ---
+    match /surveyUploads/{docId} {
+      allow read: if request.auth != null && (isAdmin() || resource.data.teacherUid == request.auth.uid);
+      allow create: if isActiveRole('teacher') && request.resource.data.teacherUid == request.auth.uid;
+      allow update, delete: if isAdmin();
     }
 
     // Deny everything else by default.

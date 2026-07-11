@@ -4,8 +4,9 @@ import { Bell, CalendarClock, School, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFirestoreCollection } from '../hooks/useFirestore';
 import type { Announcement, CourseAnnouncement, ReviewEntry, PartnerSchool } from '../types/content';
+import type { CarouselSlide } from '../types/portal';
 
-const carouselImages = [
+const fallbackCarouselImages = [
   "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=1920",
   "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1920",
   "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1920"
@@ -18,13 +19,15 @@ export default function Home() {
   const { data: courses, loading: coursesLoading } = useFirestoreCollection<CourseAnnouncement>('courses');
   const { data: reviews } = useFirestoreCollection<ReviewEntry>('reviews');
   const { data: schools } = useFirestoreCollection<PartnerSchool>('schools');
+  const { data: slides } = useFirestoreCollection<CarouselSlide>('carouselSlides');
+  const carouselImages = slides.length > 0 ? slides.map((s) => s.imageUrl) : fallbackCarouselImages;
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [carouselImages.length]);
 
   return (
     <div className="flex flex-col w-full pb-16">
@@ -33,7 +36,7 @@ export default function Home() {
         <AnimatePresence mode="wait">
           <motion.img
             key={currentSlide}
-            src={carouselImages[currentSlide]}
+            src={carouselImages[currentSlide % carouselImages.length]}
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.6 }}
             exit={{ opacity: 0 }}

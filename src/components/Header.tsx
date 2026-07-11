@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Header() {
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const { user } = useAuth();
+  const workshopLink = user ? '/portal' : '/login';
+  const workshopLabel = user ? '我的專區' : '計畫工作坊';
 
   return (
     <nav className="sticky top-0 z-50 bg-[#003366] border-b-4 border-[#C5A059] text-white shadow-md px-4 md:px-8 py-4">
@@ -23,11 +27,11 @@ export default function Header() {
             <Link to="/" className={`whitespace-nowrap transition-all border-b-2 ${isHome ? 'border-[#C5A059]' : 'border-transparent opacity-70 hover:opacity-100 hover:border-[#C5A059]'}`}>首頁</Link>
             <Link to="/introduction" className="whitespace-nowrap opacity-70 hover:opacity-100 transition-all border-b-2 border-transparent hover:border-[#C5A059]">計畫介紹</Link>
             <Link to="/organization" className="whitespace-nowrap opacity-70 hover:opacity-100 transition-all border-b-2 border-transparent hover:border-[#C5A059]">計畫組織</Link>
-            <button className="ml-2 px-6 py-2 bg-[#C5A059] text-[#003366] rounded-full hover:bg-[#b5924d] transition-all font-bold shadow-lg whitespace-nowrap transform hover:scale-105 active:scale-95">計畫工作坊</button>
+            <Link to={workshopLink} className="ml-2 px-6 py-2 bg-[#C5A059] text-[#003366] rounded-full hover:bg-[#b5924d] transition-all font-bold shadow-lg whitespace-nowrap transform hover:scale-105 active:scale-95">{workshopLabel}</Link>
           </div>
           {/* Mobile Menu Button Placeholder */}
           <div className="lg:hidden">
-            <button className="text-xs font-semibold px-4 py-2 bg-[#C5A059] text-[#003366] rounded-full">工作坊</button>
+            <Link to={workshopLink} className="text-xs font-semibold px-4 py-2 bg-[#C5A059] text-[#003366] rounded-full">{user ? '專區' : '工作坊'}</Link>
           </div>
         </div>
       </div>

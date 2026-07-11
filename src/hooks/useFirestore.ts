@@ -16,14 +16,17 @@ interface CollectionState<T> {
   error: Error | null;
 }
 
+const defaultConstraints = [orderBy('order')];
+
 // Live-subscribes to a Firestore collection so admin edits show up on the site
-// without a redeploy. `orderField` defaults to a numeric "order" field used
-// throughout this project's content collections.
+// without a redeploy. Pass explicit constraints (where/orderBy/limit) for
+// anything beyond "everything, ordered by a numeric order field".
 export function useFirestoreCollection<T extends DocumentData>(
   collectionName: string,
-  orderField: string = 'order'
+  constraints: QueryConstraint[] = defaultConstraints
 ): CollectionState<T> {
   const [state, setState] = useState<CollectionState<T>>({ data: [], loading: true, error: null });
+  const constraintsKey = JSON.stringify(constraints.map((c) => c.type));
 
   useEffect(() => {
     if (!db) {
@@ -31,7 +34,6 @@ export function useFirestoreCollection<T extends DocumentData>(
       return;
     }
 
-    const constraints: QueryConstraint[] = orderField ? [orderBy(orderField)] : [];
     const q = query(collection(db, collectionName), ...constraints);
 
     const unsubscribe = onSnapshot(
@@ -44,7 +46,8 @@ export function useFirestoreCollection<T extends DocumentData>(
     );
 
     return unsubscribe;
-  }, [collectionName, orderField]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collectionName, constraintsKey]);
 
   return state;
 }
