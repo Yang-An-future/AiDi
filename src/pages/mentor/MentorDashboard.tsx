@@ -43,7 +43,7 @@ export default function MentorDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-12">
+    <div className="flex-grow bg-slate-50 px-6 py-12">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>

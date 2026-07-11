@@ -76,8 +76,26 @@ export default function App() {
               </TopBarLayout>
             }
           />
-          <Route path="/mentor" element={<RequireRole allowedRoles={['mentor']}><MentorDashboard /></RequireRole>} />
-          <Route path="/teacher" element={<RequireRole allowedRoles={['teacher']}><TeacherDashboard /></RequireRole>} />
+          <Route
+            path="/mentor"
+            element={
+              <TopBarLayout>
+                <RequireRole allowedRoles={['mentor']}>
+                  <MentorDashboard />
+                </RequireRole>
+              </TopBarLayout>
+            }
+          />
+          <Route
+            path="/teacher"
+            element={
+              <TopBarLayout>
+                <RequireRole allowedRoles={['teacher']}>
+                  <TeacherDashboard />
+                </RequireRole>
+              </TopBarLayout>
+            }
+          />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
