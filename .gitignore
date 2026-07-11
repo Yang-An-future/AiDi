@@ -8,3 +8,7 @@ coverage/
 !.env.example
 serviceAccountKey*.json
 firebase-adminsdk*.json
+
+# Real names/PII — never committed, only exists locally / on the server
+# that runs the seed script.
+scripts/roster-data.json

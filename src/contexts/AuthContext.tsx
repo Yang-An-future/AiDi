@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
-  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  linkWithCredential,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
+  type AuthCredential,
   type User,
 } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -15,8 +18,8 @@ interface AuthContextValue {
   profile: UserProfile | null;
   loading: boolean;
   profileLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  linkGoogleWithPassword: (email: string, password: string, pendingCredential: AuthCredential) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -61,24 +64,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, [user]);
 
-  const login = async (email: string, password: string) => {
+  const loginWithGoogle = async () => {
     if (!auth) {
       throw new Error('Firebase 尚未設定，請聯繫網站管理員設定 VITE_FIREBASE_* 環境變數。');
     }
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithPopup(auth, new GoogleAuthProvider());
   };
 
-  const signup = async (email: string, password: string) => {
+  // Handles the one-time case where an email already has a password-based
+  // account (e.g. accounts created before Google sign-in existed): the user
+  // proves ownership with their password, then we link the pending Google
+  // credential onto that same account/uid so their existing profile carries over.
+  const linkGoogleWithPassword = async (email: string, password: string, pendingCredential: AuthCredential) => {
     if (!auth) {
       throw new Error('Firebase 尚未設定，請聯繫網站管理員設定 VITE_FIREBASE_* 環境變數。');
     }
-    await createUserWithEmailAndPassword(auth, email, password);
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    await linkWithCredential(result.user, pendingCredential);
   };
 
   const logout = () => (auth ? signOut(auth) : Promise.resolve());
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, profileLoading, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, profile, loading, profileLoading, loginWithGoogle, linkGoogleWithPassword, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

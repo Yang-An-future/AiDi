@@ -13,6 +13,12 @@ const statusColor: Record<UserStatus, string> = {
   disabled: 'bg-slate-200 text-slate-500',
 };
 
+function detailLabel(u: UserProfile) {
+  if (u.role === 'mentor') return [u.className, u.studentId].filter(Boolean).join(' / ') || '-';
+  if (u.role === 'teacher') return u.schoolName || '-';
+  return '-';
+}
+
 const constraints = [orderBy('createdAt', 'desc')];
 
 export default function AccountsTab() {
@@ -80,9 +86,8 @@ export default function AccountsTab() {
               </th>
               <th className="py-2 pr-4">Email</th>
               <th className="py-2 pr-4">姓名</th>
-              <th className="py-2 pr-4">班級</th>
-              <th className="py-2 pr-4">電話</th>
               <th className="py-2 pr-4">身分</th>
+              <th className="py-2 pr-4">詳細資料</th>
               <th className="py-2 pr-4">狀態</th>
               <th className="py-2 pr-4">操作</th>
             </tr>
@@ -95,9 +100,8 @@ export default function AccountsTab() {
                 </td>
                 <td className="py-2 pr-4">{u.email}</td>
                 <td className="py-2 pr-4">{u.name}</td>
-                <td className="py-2 pr-4">{u.className}</td>
-                <td className="py-2 pr-4">{u.phone}</td>
                 <td className="py-2 pr-4">{roleLabel[u.role]}</td>
+                <td className="py-2 pr-4">{detailLabel(u)}</td>
                 <td className="py-2 pr-4">
                   <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${statusColor[u.status]}`}>
                     {statusLabel[u.status]}
@@ -131,15 +135,23 @@ export default function AccountsTab() {
 
 function EditUserModal({ user, onClose }: { user: UserProfile; onClose: () => void }) {
   const [name, setName] = useState(user.name);
-  const [className, setClassName] = useState(user.className);
-  const [phone, setPhone] = useState(user.phone);
+  const [className, setClassName] = useState(user.className ?? '');
+  const [studentId, setStudentId] = useState(user.studentId ?? '');
+  const [schoolName, setSchoolName] = useState(user.schoolName ?? '');
   const [role, setRole] = useState<UserRole>(user.role);
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
     if (!db) return;
     setSaving(true);
-    await updateDoc(doc(db, 'users', user.uid), { name, className, phone, role });
+    await updateDoc(
+      doc(db, 'users', user.uid),
+      role === 'mentor'
+        ? { name, className, studentId, role }
+        : role === 'teacher'
+          ? { name, schoolName, role }
+          : { name, role }
+    );
     setSaving(false);
     onClose();
   };
@@ -156,11 +168,22 @@ function EditUserModal({ user, onClose }: { user: UserProfile; onClose: () => vo
         <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
         <input value={name} onChange={(e) => setName(e.target.value)} className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg" />
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">班級</label>
-        <input value={className} onChange={(e) => setClassName(e.target.value)} className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg" />
+        {role === 'mentor' && (
+          <>
+            <label className="block text-sm font-medium text-gray-700 mb-1">班級</label>
+            <input value={className} onChange={(e) => setClassName(e.target.value)} className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg" />
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">電話</label>
-        <input value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">學號</label>
+            <input value={studentId} onChange={(e) => setStudentId(e.target.value)} className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg" />
+          </>
+        )}
+
+        {role === 'teacher' && (
+          <>
+            <label className="block text-sm font-medium text-gray-700 mb-1">國中小名稱</label>
+            <input value={schoolName} onChange={(e) => setSchoolName(e.target.value)} className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg" />
+          </>
+        )}
 
         <label className="block text-sm font-medium text-gray-700 mb-2">身分</label>
         <div className="flex gap-4 mb-6">

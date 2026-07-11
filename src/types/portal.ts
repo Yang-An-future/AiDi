@@ -5,11 +5,20 @@ export interface UserProfile {
   uid: string;
   email: string;
   name: string;
-  className: string;
-  phone: string;
   role: UserRole;
   status: UserStatus;
   createdAt?: unknown;
+  // mentor-only
+  className?: string;
+  studentId?: string;
+  // teacher-only
+  schoolName?: string;
+}
+
+export interface SchoolOption {
+  id: string;
+  name: string;
+  order: number;
 }
 
 export interface CarouselSlide {

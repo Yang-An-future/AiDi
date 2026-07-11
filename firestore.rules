@@ -53,16 +53,50 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // --- School options (dropdown shown during teacher onboarding) ---
+    match /schoolOptions/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --- Name rosters used to auto-approve onboarding ---
+    // Only a targeted get-by-id is allowed (never list), so the client can
+    // check "does my exact name exist?" without being able to dump the whole
+    // roster. Admin manages the contents out-of-band (seed script/console).
+    match /roster_mentor/{name} {
+      allow get: if request.auth != null;
+      allow list: if false;
+      allow write: if isAdmin();
+    }
+
+    match /roster_teacher/{name} {
+      allow get: if request.auth != null;
+      allow list: if false;
+      allow write: if isAdmin();
+    }
+
     // --- Accounts ---
-    // Self-registration creates a "pending" mentor/teacher profile that can't
-    // grant itself admin or flip its own status; only an admin can do that.
+    // Self-registration creates a mentor/teacher profile that can't grant
+    // itself admin. Its status is only allowed to be 'active' when it truly
+    // matches the corresponding name roster — the exists() check re-verifies
+    // this server-side, so the client can't just lie and claim 'active'.
     match /users/{userId} {
       allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
       allow create: if request.auth != null
         && request.auth.uid == userId
-        && request.resource.data.role in ['mentor', 'teacher']
-        && request.resource.data.status == 'pending'
-        && request.resource.data.email == request.auth.token.email;
+        && request.resource.data.email == request.auth.token.email
+        && (
+          (request.resource.data.role == 'mentor'
+            && request.resource.data.status == (
+              exists(/databases/$(database)/documents/roster_mentor/$(request.resource.data.name))
+                ? 'active' : 'pending'
+            ))
+          || (request.resource.data.role == 'teacher'
+            && request.resource.data.status == (
+              exists(/databases/$(database)/documents/roster_teacher/$(request.resource.data.name))
+                ? 'active' : 'pending'
+            ))
+        );
       allow update: if isAdmin()
         || (request.auth != null && request.auth.uid == userId
             && request.resource.data.role == resource.data.role

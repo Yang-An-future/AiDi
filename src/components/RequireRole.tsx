@@ -30,15 +30,10 @@ export default function RequireRole({
     return null;
   }
 
+  // Pending accounts are handled by the global PendingGate (which forces a
+  // logout back to the homepage), so nothing needs to render here.
   if (profile.status === 'pending') {
-    return (
-      <Centered>
-        <div>
-          <p className="text-lg font-bold text-[#003366] mb-2">帳號審核中</p>
-          <p className="text-sm text-gray-500">請等待管理員啟用帳號後再登入使用。</p>
-        </div>
-      </Centered>
-    );
+    return null;
   }
 
   if (profile.status === 'disabled') {

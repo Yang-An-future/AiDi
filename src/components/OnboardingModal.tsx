@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
-import type { UserRole } from '../types/portal';
+import { useFirestoreCollection } from '../hooks/useFirestore';
+import type { SchoolOption, UserRole, UserStatus } from '../types/portal';
+
+// Roster collections are keyed by the exact trimmed name the admin supplies
+// (see roster_mentor / roster_teacher), so a single getDoc is enough to check
+// membership without exposing the full name list to the client.
+async function resolveStatus(role: UserRole, name: string): Promise<UserStatus> {
+  if (!db) return 'pending';
+  const collectionName = role === 'mentor' ? 'roster_mentor' : 'roster_teacher';
+  const snapshot = await getDoc(doc(db, collectionName, name));
+  return snapshot.exists() ? 'active' : 'pending';
+}
 
 export default function OnboardingModal() {
   const { user, logout } = useAuth();
+  const { data: schools } = useFirestoreCollection<SchoolOption>('schoolOptions');
+  const [role, setRole] = useState<UserRole | ''>('');
   const [name, setName] = useState('');
   const [className, setClassName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [role, setRole] = useState<UserRole>('mentor');
+  const [studentId, setStudentId] = useState('');
+  const [schoolName, setSchoolName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,20 +31,35 @@ export default function OnboardingModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!name.trim() || !className.trim() || !phone.trim()) {
-      setError('請完整填寫姓名、班級與電話。');
+
+    if (!role) {
+      setError('請選擇身分。');
       return;
     }
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      setError('請填寫姓名。');
+      return;
+    }
+    if (role === 'mentor' && (!className.trim() || !studentId.trim())) {
+      setError('請完整填寫班級與學號。');
+      return;
+    }
+    if (role === 'teacher' && !schoolName) {
+      setError('請選擇服務的國中小。');
+      return;
+    }
+
     setSubmitting(true);
     try {
+      const status = await resolveStatus(role, trimmedName);
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
-        name: name.trim(),
-        className: className.trim(),
-        phone: phone.trim(),
+        name: trimmedName,
         role,
-        status: 'pending',
+        status,
+        ...(role === 'mentor' ? { className: className.trim(), studentId: studentId.trim() } : { schoolName }),
         createdAt: serverTimestamp(),
       });
     } catch {
@@ -47,55 +75,85 @@ export default function OnboardingModal() {
         className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border-t-8 border-[#003366]"
       >
         <h2 className="text-xl font-bold text-[#003366] mb-2">完成個人資料</h2>
-        <p className="text-sm text-gray-500 mb-6">首次登入請填寫以下資料，送出後將由管理員審核啟用帳號。</p>
+        <p className="text-sm text-gray-500 mb-6">首次登入請選擇身分並填寫以下資料。</p>
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        <input
-          type="email"
-          disabled
-          value={user.email ?? ''}
-          className="w-full mb-4 px-4 py-2 border border-slate-200 bg-slate-50 rounded-lg text-gray-500"
-        />
+        <label className="block text-sm font-medium text-gray-700 mb-1">身分</label>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value as UserRole)}
+          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E] bg-white"
+        >
+          <option value="">請選擇身分</option>
+          <option value="mentor">大學伴</option>
+          <option value="teacher">學習端老師</option>
+        </select>
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
-        <input
-          type="text"
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
-        />
+        {role && (
+          <>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              disabled
+              value={user.email ?? ''}
+              className="w-full mb-4 px-4 py-2 border border-slate-200 bg-slate-50 rounded-lg text-gray-500"
+            />
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">班級</label>
-        <input
-          type="text"
-          required
-          value={className}
-          onChange={(e) => setClassName(e.target.value)}
-          placeholder="例：教育系三年級 / 屏大附小三年一班"
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
-        />
+            <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="請填寫真實姓名，以利身分核對"
+              className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
+            />
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">電話</label>
-        <input
-          type="tel"
-          required
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
-        />
+            {role === 'mentor' && (
+              <>
+                <label className="block text-sm font-medium text-gray-700 mb-1">班級</label>
+                <input
+                  type="text"
+                  required
+                  value={className}
+                  onChange={(e) => setClassName(e.target.value)}
+                  placeholder="例：教育系三年級"
+                  className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
+                />
 
-        <label className="block text-sm font-medium text-gray-700 mb-2">身分</label>
-        <div className="flex gap-4 mb-6">
-          <label className="flex items-center gap-2 text-sm">
-            <input type="radio" name="role" checked={role === 'mentor'} onChange={() => setRole('mentor')} />
-            大學伴
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="radio" name="role" checked={role === 'teacher'} onChange={() => setRole('teacher')} />
-            學習端老師
-          </label>
-        </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">學號</label>
+                <input
+                  type="text"
+                  required
+                  value={studentId}
+                  onChange={(e) => setStudentId(e.target.value)}
+                  className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E]"
+                />
+              </>
+            )}
+
+            {role === 'teacher' && (
+              <>
+                <label className="block text-sm font-medium text-gray-700 mb-1">國中小名稱</label>
+                <select
+                  required
+                  value={schoolName}
+                  onChange={(e) => setSchoolName(e.target.value)}
+                  className="w-full mb-4 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F5892E] bg-white"
+                >
+                  <option value="">請選擇學校</option>
+                  {schools.map((s) => (
+                    <option key={s.id} value={s.name}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                {schools.length === 0 && (
+                  <p className="text-xs text-gray-400 -mt-2 mb-4 italic">學校名單尚未建置，如清單為空請聯繫管理員。</p>
+                )}
+              </>
+            )}
+          </>
+        )}
 
         {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 

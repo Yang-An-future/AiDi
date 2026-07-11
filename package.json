@@ -11,6 +11,7 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "seed": "node scripts/seed.mjs",
+    "seed-roster": "node scripts/seedRoster.mjs",
     "create-admin": "node scripts/createAdmin.mjs",
     "deploy-rules": "node scripts/deployRules.mjs"
   },

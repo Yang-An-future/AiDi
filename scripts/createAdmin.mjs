@@ -46,8 +46,6 @@ async function main() {
       uid: user.uid,
       email,
       name,
-      className: '-',
-      phone: '-',
       role: 'admin',
       status: 'active',
       createdAt: new Date(),
@@ -55,7 +53,7 @@ async function main() {
     { merge: true }
   );
 
-  console.log(`Done. ${email} can now log in at /login as an admin.`);
+  console.log(`Done. ${email} can now log in at /login (Google sign-in) as an admin.`);
 }
 
 main()
