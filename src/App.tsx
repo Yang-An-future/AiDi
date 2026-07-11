@@ -28,6 +28,17 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Same topbar as the rest of the site, but no footer — used for the login
+// page where a full site chrome isn't wanted.
+function TopBarLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-gray-800 flex flex-col pt-0">
+      <Header />
+      <main className="flex-grow flex flex-col">{children}</main>
+    </div>
+  );
+}
+
 function OnboardingGate() {
   const { user, profile, loading, profileLoading } = useAuth();
   if (loading || profileLoading || !user || profile) return null;
@@ -53,9 +64,18 @@ export default function App() {
           <Route path="/introduction" element={<Layout><ProjectIntro /></Layout>} />
           <Route path="/organization" element={<Layout><ProjectOrg /></Layout>} />
           <Route path="/review/:id" element={<Layout><div className="min-h-screen flex items-center justify-center text-[#003366] font-bold text-2xl">計畫執行回顧詳情頁面 (開發中)</div></Layout>} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<TopBarLayout><Login /></TopBarLayout>} />
           <Route path="/portal" element={<Portal />} />
-          <Route path="/admin" element={<RequireRole allowedRoles={['admin']}><AdminDashboard /></RequireRole>} />
+          <Route
+            path="/admin"
+            element={
+              <TopBarLayout>
+                <RequireRole allowedRoles={['admin']}>
+                  <AdminDashboard />
+                </RequireRole>
+              </TopBarLayout>
+            }
+          />
           <Route path="/mentor" element={<RequireRole allowedRoles={['mentor']}><MentorDashboard /></RequireRole>} />
           <Route path="/teacher" element={<RequireRole allowedRoles={['teacher']}><TeacherDashboard /></RequireRole>} />
         </Routes>

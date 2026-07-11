@@ -21,7 +21,7 @@ export default function AdminDashboard() {
   const ActiveComponent = tabs.find((t) => t.key === active)!.Component;
 
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-12">
+    <div className="flex-grow bg-slate-50 px-6 py-12">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-[#003366] flex items-center gap-3">

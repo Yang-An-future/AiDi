@@ -77,7 +77,7 @@ export default function Login() {
 
   if (linkEmail) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6">
+      <div className="flex-grow flex items-center justify-center bg-slate-50 px-6">
         <form
           onSubmit={handleLinkSubmit}
           className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 border-t-8 border-[#003366]"
