@@ -26,6 +26,8 @@ const { mentors, schools, teachers } = JSON.parse(fs.readFileSync(dataPath, 'utf
 
 // Official websites (public info, safe to commit) for the homepage "合作學校"
 // section. Keyed by the exact school name string used in roster-data.json.
+// The four 國中 added 2026/07 don't have a confirmed official site yet —
+// left out so the card just shows no website link instead of a guessed URL.
 const schoolWebsites = {
   '屏東縣三地門鄉地磨兒國民小學': 'https://www.sdps.ptc.edu.tw/',
   '高雄市美濃區美濃國民小學': 'https://www.mnp.kh.edu.tw/index.php?WebID=228',
@@ -42,11 +44,11 @@ const schoolWebsites = {
 
 const BADGE_COLORS = ['#003366', '#F5892E'];
 
-// Pulls the distinctive part out of "<縣市><鄉鎮市區><school name>國民小學",
+// Pulls the distinctive part out of "<縣市><鄉鎮市區><school name>國民小學/國民中學",
 // e.g. "屏東縣三地門鄉地磨兒國民小學" -> "地磨兒", so the placeholder logo
 // badge shows something recognizable instead of repeating "屏東" on every card.
 function shortSchoolName(fullName) {
-  const match = fullName.match(/^(?:.*?(?:縣|市))(?:.*?(?:鄉|鎮|市|區))(.*)國民小學$/);
+  const match = fullName.match(/^(?:.*?(?:縣|市))(?:.*?(?:鄉|鎮|市|區))(.*)國民(?:小學|中學)$/);
   return match ? match[1] : fullName.slice(0, 2);
 }
 
